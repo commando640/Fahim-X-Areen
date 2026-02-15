@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,43 +7,28 @@
 <style>
 body{
 margin:0;
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#ff758c,#ff7eb3);
 overflow:hidden;
 color:white;
 }
 body::before{
 content:"";
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.3);
-z-index:-1;
+position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.3);z-index:-1;
 }
 .screen{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:10px;
-box-sizing:border-box;
+position:absolute;width:100%;height:100%;
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;text-align:center;
+padding:10px;box-sizing:border-box;
 }
 .hidden{display:none;}
 h1,h2,p{ text-shadow:0 2px 5px rgba(0,0,0,0.5);}
 button{
-padding:12px 25px;
-border:none;
-border-radius:25px;
-background:#ff4d6d;
-color:white;
-font-weight:bold;
-cursor:pointer;
-margin:8px;
-font-size:16px;
+padding:12px 25px;border:none;border-radius:25px;
+background:#ff4d6d;color:white;font-weight:bold;
+cursor:pointer;margin:8px;font-size:16px;
 }
 .photos{display:flex;gap:15px;margin:20px;flex-wrap:wrap;justify-content:center;}
 .photos img{border-radius:50%;border:4px solid white;object-fit:cover;}
@@ -51,47 +36,20 @@ font-size:16px;
 .card{width:80px;height:120px;background:white;border-radius:15px;cursor:pointer;overflow:hidden;}
 .card img{width:100%;height:100%;object-fit:cover;display:none;}
 .card.flipped img{display:block;}
-.heart{position:absolute;font-size:24px;cursor:pointer;animation:fall 4s linear forwards;}
+.heart{position:absolute;font-size:28px;cursor:pointer;animation:fall 4s linear forwards;}
 @keyframes fall{0%{transform:translateY(-10vh);}100%{transform:translateY(110vh);}}
 .plusOne{position:absolute;font-weight:bold;color:#fff;animation:floatUp 1s ease-out forwards;font-size:14px;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-30px);}}
 #proposalText{width:90%;font-size:18px;white-space:pre-line;line-height:1.4;}
-/* --- HEARTS + SPARKLES --- */
-.heartAnim{
-position:absolute;
-width:14px;
-height:14px;
-background:pink;
-border-radius:50%;
-opacity:0.9;
-pointer-events:none;
-box-shadow:0 0 10px #ff8ce0,0 0 15px #ff5fca;
-animation:rise 3s ease-out forwards, sparkle 1s ease-in-out infinite;
-}
-@keyframes rise{
-0%{transform:translateY(0) scale(1); opacity:0.9;}
-50%{opacity:1;}
-100%{transform:translateY(-300px) scale(1.5); opacity:0;}
-}
-@keyframes sparkle{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.5);}
-}
-/* --- CONFETTI --- */
-.confetti{
-position:absolute;
-width:6px;
-height:6px;
-border-radius:50%;
-opacity:0.8;
-pointer-events:none;
-animation:confettiFall linear forwards;
-}
-@keyframes confettiFall{
-0%{transform:translateY(0) rotate(0deg);}
-100%{transform:translateY(700px) rotate(360deg);}
-}
-/* --- MOBILE RESPONSIVE --- */
+
+/* Floating glowing hearts */
+.heartAnim{position:absolute;width:14px;height:14px;background:pink;border-radius:50%;opacity:0.9;pointer-events:none;box-shadow:0 0 10px #ff8ce0,0 0 15px #ff5fca;animation:rise 3s ease-out forwards, sparkle 1s ease-in-out infinite;}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:0.9;}50%{opacity:1;}100%{transform:translateY(-300px) scale(1.5);opacity:0;}}
+@keyframes sparkle{0%,100%{transform:scale(1);}50%{transform:scale(1.5);}}
+/* Confetti */
+.confetti{position:absolute;width:6px;height:6px;border-radius:50%;opacity:0.8;pointer-events:none;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);}100%{transform:translateY(700px) rotate(360deg);}}
+/* MOBILE */
 @media (max-width:480px){
 button{font-size:14px;padding:10px 20px;}
 .photos img{width:100px;height:auto;}
@@ -103,7 +61,7 @@ button{font-size:14px;padding:10px 20px;}
 </head>
 <body>
 
-<audio id="bgMusic" loop autoplay>
+<audio id="bgMusic" loop>
 <source src="music.mp3" type="audio/mp3">
 </audio>
 
@@ -143,19 +101,19 @@ button{font-size:14px;padding:10px 20px;}
 </div>
 
 <script>
-// --- GAME VARIABLES ---
 const bgMusic=document.getElementById("bgMusic");
-bgMusic.volume=1; // 100%
 let firstCard=null, lock=false, matches=0, score=0, interval;
 
 // --- START GAME ---
 function startGame(){
 document.getElementById("startScreen").classList.add("hidden");
 document.getElementById("level1").classList.remove("hidden");
+// MOBILE AUTOPLAY FIX: user touch required
+bgMusic.play().catch(()=>{});
 createCards();
 }
 
-// --- MEMORY MATCH LEVEL 1 ---
+// --- MEMORY MATCH ---
 function createCards(){
 let images=["your-photo.jpg","your-photo.jpg","areen-photo.jpg","areen-photo.jpg"];
 images.sort(()=>0.5-Math.random());
@@ -164,20 +122,20 @@ images.forEach(src=>{
 let card=document.createElement("div"); card.className="card"; card.dataset.image=src;
 let img=document.createElement("img"); img.src=src; card.appendChild(img);
 card.onclick=function(){
-if(lock||card.classList.contains("flipped"))return;
+if(lock||card.classList.contains("flipped")) return;
 card.classList.add("flipped");
 if(!firstCard){firstCard=card;}else{
-if(firstCard.dataset.image===card.dataset.image){matches++; firstCard=null;
-if(matches===2){setTimeout(goLevel2,1000);}}else{
-lock=true; setTimeout(()=>{
-firstCard.classList.remove("flipped"); card.classList.remove("flipped"); firstCard=null; lock=false;
-},800);
+if(firstCard.dataset.image===card.dataset.image){
+matches++; firstCard=null;
+if(matches===2){setTimeout(goLevel2,1000);}
+}else{
+lock=true; setTimeout(()=>{firstCard.classList.remove("flipped");card.classList.remove("flipped");firstCard=null;lock=false;},800);
 }}}
 container.appendChild(card);
 });
 }
 
-// --- LEVEL 2: CATCH HEARTS ---
+// --- LEVEL 2 ---
 function goLevel2(){
 document.getElementById("level1").classList.add("hidden");
 document.getElementById("level2").classList.remove("hidden");
@@ -189,13 +147,16 @@ let heart=document.createElement("div"); heart.className="heart"; heart.innerHTM
 heart.style.left=Math.random()*90+"vw";
 heart.caught=false;
 heart.onclick=function(e){
-if(heart.caught)return; // FIX multiple clicks
-heart.caught=true;
+if(this.caught) return; // 1 click fix
+this.caught=true;
 let plus=document.createElement("div"); plus.className="plusOne"; plus.innerText="+1 Love 💕";
 plus.style.left=e.pageX+"px"; plus.style.top=e.pageY+"px";
-document.body.appendChild(plus); setTimeout(()=>plus.remove(),1000);
-score++; document.getElementById("score").innerText=score; heart.remove();}
-document.body.appendChild(heart); setTimeout(()=>heart.remove(),4000);
+document.body.appendChild(plus);
+setTimeout(()=>plus.remove(),1000);
+score++; document.getElementById("score").innerText=score; heart.remove();
+}
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),4000);
 }
 
 // --- FINAL PROPOSAL ---
@@ -217,15 +178,15 @@ I promise to love you in every lifetime.
 – Your Fahim ❤️`;
 
 let i=0;
-function typeWriter(){ if(i<text.length){ document.getElementById("proposalText").innerHTML+=text.charAt(i); i++; setTimeout(typeWriter,40);} }
+function typeWriter(){ if(i<text.length){document.getElementById("proposalText").innerHTML+=text.charAt(i); i++; setTimeout(typeWriter,40);} }
 
 function celebrate(){alert("I LOVE YOU AREEEN ❤️");}
 function restart(){location.reload();}
 
-// FLOATING GLOWING HEARTS
+// FLOATING HEARTS
 function startHeartAnimation(){
-for(let i=0;i<30;i++){ createHeartAnim();}
-setInterval(()=>{ for(let i=0;i<15;i++) createHeartAnim(); },2000);
+for(let i=0;i<30;i++) createHeartAnim();
+setInterval(()=>{for(let i=0;i<15;i++) createHeartAnim()},2000);
 }
 function createHeartAnim(){
 let h=document.createElement("div"); h.className="heartAnim";
@@ -234,13 +195,13 @@ h.style.top=90+Math.random()*10+"vh";
 h.style.animationDuration=(2+Math.random()*2)+"s";
 h.style.opacity=0.5 + Math.random()*0.5;
 document.body.appendChild(h);
-setTimeout(()=>h.remove(),4000 + Math.random()*2000);
+setTimeout(()=>h.remove(),4000+Math.random()*2000);
 }
 
-// CONFETTI PARTICLES
+// CONFETTI
 function startConfetti(){
-for(let i=0;i<50;i++){ createConfetti();}
-setInterval(()=>{ for(let i=0;i<25;i++) createConfetti(); },2000);
+for(let i=0;i<50;i++) createConfetti();
+setInterval(()=>{for(let i=0;i<25;i++) createConfetti()},2000);
 }
 function createConfetti(){
 let c=document.createElement("div"); c.className="confetti";
@@ -248,7 +209,7 @@ c.style.left=Math.random()*100+"vw";
 c.style.background=`hsl(${Math.random()*360},80%,60%)`;
 c.style.animationDuration=(2+Math.random()*2)+"s";
 document.body.appendChild(c);
-setTimeout(()=>c.remove(),4000 + Math.random()*2000);
+setTimeout(()=>c.remove(),4000+Math.random()*2000);
 }
 </script>
 
